@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-12
+
 ### Added
 
 - First version of the Flair integration, built from the official Gladys
@@ -38,4 +40,5 @@ the notes of the version's GitHub Release.
   build), Release workflow, GitHub Releases, Dependabot.
 - `SECURITY.md` and `CLAUDE.md`.
 
-[Unreleased]: https://github.com/prohand/gladys-flair/commits/main
+[Unreleased]: https://github.com/prohand/gladys-flair/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/prohand/gladys-flair/releases/tag/v1.0.1

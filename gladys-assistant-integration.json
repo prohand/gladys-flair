@@ -8,8 +8,8 @@
     "de": "Steuere Flair Smart Vents, Raum-Sollwerte und Zuhause/Abwesend, lies die Flair Pucks.",
     "es": "Controle las rejillas Flair, las consignas de las habitaciones y En casa/Fuera, lea los Pucks."
   },
-  "version": "1.0.0",
-  "docker_image": "ghcr.io/prohand/gladys-flair:1.0.0",
+  "version": "1.0.1",
+  "docker_image": "ghcr.io/prohand/gladys-flair:1.0.1",
   "gladys_version": ">=5.3.0",
   "cover_image": "https://raw.githubusercontent.com/prohand/gladys-flair/main/cover.png",
   "categories": ["climate", "environment"],
