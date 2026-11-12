@@ -1,0 +1,569 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Flair",
+  "description": {
+    "en": "Control Flair Smart Vents, room set points and Home/Away, read the Flair Pucks.",
+    "fr": "Pilotez les bouches Flair, les consignes des pièces et Présent/Absent, lisez les Pucks.",
+    "de": "Steuere Flair Smart Vents, Raum-Sollwerte und Zuhause/Abwesend, lies die Flair Pucks.",
+    "es": "Controle las rejillas Flair, las consignas de las habitaciones y En casa/Fuera, lea los Pucks."
+  },
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/prohand/gladys-flair:1.0.0",
+  "gladys_version": ">=5.3.0",
+  "cover_image": "https://raw.githubusercontent.com/prohand/gladys-flair/main/cover.png",
+  "categories": ["climate", "environment"],
+  "keywords": [
+    "flair",
+    "smart vent",
+    "puck",
+    "hvac",
+    "zoning",
+    "bouche connectée",
+    "registre",
+    "cvc"
+  ],
+  "transports": ["cloud"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Getting started",
+        "fr": "Pour commencer",
+        "de": "Erste Schritte",
+        "es": "Primeros pasos"
+      },
+      "description": {
+        "en": "Flair is reached through its cloud API, with OAuth 2.0 credentials (a client ID and a client secret) that Flair support gives on request. Enter them below, save, then press \"Test the connection\": your homes, rooms, vents and pucks appear in the Discovery tab.",
+        "fr": "Flair se pilote par son API cloud, avec des identifiants OAuth 2.0 (un identifiant client et un secret client) que le support Flair fournit sur demande. Saisissez-les ci-dessous, enregistrez, puis cliquez sur « Tester la connexion » : vos maisons, pièces, bouches et pucks apparaissent dans l'onglet Découverte.",
+        "de": "Flair wird über seine Cloud-API mit OAuth-2.0-Zugangsdaten (Client-ID und Client-Secret) gesteuert, die der Flair-Support auf Anfrage ausstellt. Gib sie unten ein, speichere und klicke auf „Verbindung testen“: Deine Zuhause, Räume, Klappen und Pucks erscheinen im Tab „Erkennung“.",
+        "es": "Flair se controla mediante su API en la nube, con credenciales OAuth 2.0 (un ID de cliente y un secreto de cliente) que el soporte de Flair proporciona a petición. Introdúzcalas abajo, guarde y pulse «Probar la conexión»: sus casas, habitaciones, rejillas y pucks aparecen en la pestaña Descubrimiento."
+      },
+      "links": [
+        {
+          "url": "https://flair.co",
+          "label": {
+            "en": "Flair website",
+            "fr": "Site de Flair",
+            "de": "Flair-Website",
+            "es": "Sitio web de Flair"
+          }
+        },
+        {
+          "url": "https://github.com/prohand/gladys-flair/blob/main/docs/en.md",
+          "label": {
+            "en": "Integration documentation",
+            "fr": "Documentation de l'intégration",
+            "de": "Dokumentation der Integration",
+            "es": "Documentación de la integración"
+          }
+        }
+      ]
+    },
+    {
+      "key": "client_id",
+      "type": "string",
+      "label": {
+        "en": "Client ID",
+        "fr": "Identifiant client",
+        "de": "Client-ID",
+        "es": "ID de cliente"
+      },
+      "description": {
+        "en": "OAuth 2.0 client ID of the Flair API.",
+        "fr": "Identifiant client OAuth 2.0 de l'API Flair.",
+        "de": "OAuth-2.0-Client-ID der Flair-API.",
+        "es": "ID de cliente OAuth 2.0 de la API de Flair."
+      },
+      "placeholder": {
+        "en": "Flair client ID",
+        "fr": "Identifiant client Flair",
+        "de": "Flair-Client-ID",
+        "es": "ID de cliente de Flair"
+      },
+      "required": true
+    },
+    {
+      "key": "client_secret",
+      "type": "secret",
+      "label": {
+        "en": "Client secret",
+        "fr": "Secret client",
+        "de": "Client-Secret",
+        "es": "Secreto de cliente"
+      },
+      "description": {
+        "en": "OAuth 2.0 client secret of the Flair API. Stored as a secret, never logged.",
+        "fr": "Secret client OAuth 2.0 de l'API Flair. Stocké comme secret, jamais journalisé.",
+        "de": "OAuth-2.0-Client-Secret der Flair-API. Als Geheimnis gespeichert, nie protokolliert.",
+        "es": "Secreto de cliente OAuth 2.0 de la API de Flair. Guardado como secreto, nunca registrado."
+      },
+      "required": true
+    },
+    {
+      "key": "poll_frequency",
+      "type": "number",
+      "label": {
+        "en": "Refresh interval (s)",
+        "fr": "Intervalle de rafraîchissement (s)",
+        "de": "Aktualisierungsintervall (s)",
+        "es": "Intervalo de actualización (s)"
+      },
+      "description": {
+        "en": "How often the Flair account is read, in seconds (one minute minimum).",
+        "fr": "Fréquence de lecture du compte Flair, en secondes (une minute minimum).",
+        "de": "Wie oft das Flair-Konto gelesen wird, in Sekunden (mindestens eine Minute).",
+        "es": "Frecuencia de lectura de la cuenta Flair, en segundos (un minuto como mínimo)."
+      },
+      "required": false,
+      "default": 120,
+      "min": 60,
+      "max": 3600
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "timeout_seconds": 60
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "home_away_changed",
+      "label": {
+        "en": "Flair home or away changed",
+        "fr": "Flair présent ou absent a changé",
+        "de": "Flair Zuhause/Abwesend geändert",
+        "es": "Flair en casa o fuera cambió"
+      },
+      "description": {
+        "en": "A Flair home switched between Home and Away (Flair app, geofencing or Gladys).",
+        "fr": "Une maison Flair est passée de Présent à Absent ou l'inverse (appli Flair, géorepérage ou Gladys).",
+        "de": "Ein Flair-Zuhause wechselte zwischen Zuhause und Abwesend (Flair-App, Geofencing oder Gladys).",
+        "es": "Una casa Flair pasó de En casa a Fuera o al revés (app Flair, geovalla o Gladys)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Home",
+            "fr": "Maison",
+            "de": "Zuhause",
+            "es": "Casa"
+          }
+        },
+        {
+          "key": "mode",
+          "type": "multi_select",
+          "label": {
+            "en": "New mode",
+            "fr": "Nouveau mode",
+            "de": "Neuer Modus",
+            "es": "Nuevo modo"
+          },
+          "options": [
+            {
+              "value": "home",
+              "label": {
+                "en": "Home",
+                "fr": "Présent",
+                "de": "Zuhause",
+                "es": "En casa"
+              }
+            },
+            {
+              "value": "away",
+              "label": {
+                "en": "Away",
+                "fr": "Absent",
+                "de": "Abwesend",
+                "es": "Fuera"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "mode",
+          "type": "string",
+          "label": {
+            "en": "New mode",
+            "fr": "Nouveau mode",
+            "de": "Neuer Modus",
+            "es": "Nuevo modo"
+          }
+        },
+        {
+          "key": "home_name",
+          "type": "string",
+          "label": {
+            "en": "Home name",
+            "fr": "Nom de la maison",
+            "de": "Name des Zuhauses",
+            "es": "Nombre de la casa"
+          }
+        }
+      ]
+    },
+    {
+      "key": "device_connectivity_changed",
+      "label": {
+        "en": "Flair device online or offline",
+        "fr": "Appareil Flair en ligne ou hors ligne",
+        "de": "Flair-Gerät online oder offline",
+        "es": "Dispositivo Flair en línea o sin conexión"
+      },
+      "description": {
+        "en": "A Flair vent or puck stopped reporting (battery, radio) or came back.",
+        "fr": "Une bouche ou un puck Flair a cessé de répondre (pile, radio) ou est revenu.",
+        "de": "Eine Flair-Klappe oder ein Puck meldet sich nicht mehr (Batterie, Funk) oder ist zurück.",
+        "es": "Una rejilla o un puck Flair dejó de responder (batería, radio) o ha vuelto."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Vent or puck",
+            "fr": "Bouche ou puck",
+            "de": "Klappe oder Puck",
+            "es": "Rejilla o puck"
+          }
+        },
+        {
+          "key": "status",
+          "type": "multi_select",
+          "label": {
+            "en": "Status",
+            "fr": "État",
+            "de": "Status",
+            "es": "Estado"
+          },
+          "options": [
+            {
+              "value": "offline",
+              "label": {
+                "en": "Offline",
+                "fr": "Hors ligne",
+                "de": "Offline",
+                "es": "Sin conexión"
+              }
+            },
+            {
+              "value": "online",
+              "label": {
+                "en": "Back online",
+                "fr": "De retour en ligne",
+                "de": "Wieder online",
+                "es": "De nuevo en línea"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "status",
+          "type": "string",
+          "label": {
+            "en": "Status",
+            "fr": "État",
+            "de": "Status",
+            "es": "Estado"
+          }
+        },
+        {
+          "key": "device_name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l'appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "set_vent_position",
+      "label": {
+        "en": "Set a Flair vent opening",
+        "fr": "Régler l'ouverture d'une bouche Flair",
+        "de": "Öffnung einer Flair-Klappe setzen",
+        "es": "Ajustar la apertura de una rejilla Flair"
+      },
+      "description": {
+        "en": "Open, close or half-open a vent. In Auto mode Flair may move it again later.",
+        "fr": "Ouvre, ferme ou entrouvre une bouche. En mode Auto, Flair peut la déplacer ensuite.",
+        "de": "Öffnet, schließt oder halböffnet eine Klappe. Im Auto-Modus kann Flair sie später verstellen.",
+        "es": "Abre, cierra o entreabre una rejilla. En modo Auto, Flair puede moverla después."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Vent",
+            "fr": "Bouche",
+            "de": "Klappe",
+            "es": "Rejilla"
+          },
+          "required": true
+        },
+        {
+          "key": "position",
+          "type": "number",
+          "label": {
+            "en": "Opening (%)",
+            "fr": "Ouverture (%)",
+            "de": "Öffnung (%)",
+            "es": "Apertura (%)"
+          },
+          "required": true,
+          "default": 100,
+          "min": 0,
+          "max": 100
+        }
+      ],
+      "outputs": [
+        {
+          "key": "position",
+          "type": "number",
+          "label": {
+            "en": "Opening (%)",
+            "fr": "Ouverture (%)",
+            "de": "Öffnung (%)",
+            "es": "Apertura (%)"
+          }
+        },
+        {
+          "key": "auto_mode",
+          "type": "boolean",
+          "label": {
+            "en": "Home in Auto mode",
+            "fr": "Maison en mode Auto",
+            "de": "Zuhause im Auto-Modus",
+            "es": "Casa en modo Auto"
+          }
+        }
+      ]
+    },
+    {
+      "key": "set_room_set_point",
+      "label": {
+        "en": "Set a Flair room set point",
+        "fr": "Régler la consigne d'une pièce Flair",
+        "de": "Sollwert eines Flair-Raums setzen",
+        "es": "Ajustar la consigna de una habitación Flair"
+      },
+      "description": {
+        "en": "Change the target temperature Flair aims for in a room.",
+        "fr": "Change la température visée par Flair dans une pièce.",
+        "de": "Ändert die Zieltemperatur, die Flair in einem Raum anstrebt.",
+        "es": "Cambia la temperatura objetivo de Flair en una habitación."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Room",
+            "fr": "Pièce",
+            "de": "Raum",
+            "es": "Habitación"
+          },
+          "required": true
+        },
+        {
+          "key": "temperature",
+          "type": "number",
+          "label": {
+            "en": "Set point (°C)",
+            "fr": "Consigne (°C)",
+            "de": "Sollwert (°C)",
+            "es": "Consigna (°C)"
+          },
+          "required": true,
+          "default": 21,
+          "min": 10,
+          "max": 32
+        }
+      ],
+      "outputs": [
+        {
+          "key": "set_point",
+          "type": "number",
+          "label": {
+            "en": "Set point (°C)",
+            "fr": "Consigne (°C)",
+            "de": "Sollwert (°C)",
+            "es": "Consigna (°C)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "set_home_away",
+      "label": {
+        "en": "Set a Flair home to Home or Away",
+        "fr": "Passer une maison Flair en Présent ou Absent",
+        "de": "Flair-Zuhause auf Zuhause oder Abwesend setzen",
+        "es": "Poner una casa Flair En casa o Fuera"
+      },
+      "description": {
+        "en": "Switch a Flair home between Home and Away.",
+        "fr": "Bascule une maison Flair entre Présent et Absent.",
+        "de": "Schaltet ein Flair-Zuhause zwischen Zuhause und Abwesend um.",
+        "es": "Cambia una casa Flair entre En casa y Fuera."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Home",
+            "fr": "Maison",
+            "de": "Zuhause",
+            "es": "Casa"
+          },
+          "required": true
+        },
+        {
+          "key": "mode",
+          "type": "select",
+          "label": {
+            "en": "Mode",
+            "fr": "Mode",
+            "de": "Modus",
+            "es": "Modo"
+          },
+          "required": true,
+          "default": "away",
+          "options": [
+            {
+              "value": "home",
+              "label": {
+                "en": "Home",
+                "fr": "Présent",
+                "de": "Zuhause",
+                "es": "En casa"
+              }
+            },
+            {
+              "value": "away",
+              "label": {
+                "en": "Away",
+                "fr": "Absent",
+                "de": "Abwesend",
+                "es": "Fuera"
+              }
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "key": "home",
+          "type": "boolean",
+          "label": {
+            "en": "Home",
+            "fr": "Présent",
+            "de": "Zuhause",
+            "es": "En casa"
+          }
+        }
+      ]
+    },
+    {
+      "key": "set_auto_mode",
+      "label": {
+        "en": "Set a Flair home to Auto or Manual",
+        "fr": "Passer une maison Flair en Auto ou Manuel",
+        "de": "Flair-Zuhause auf Auto oder Manuell setzen",
+        "es": "Poner una casa Flair en Auto o Manual"
+      },
+      "description": {
+        "en": "Auto: Flair drives the vents from the set points. Manual: they stay put.",
+        "fr": "Auto : Flair pilote les bouches selon les consignes. Manuel : elles restent en place.",
+        "de": "Auto: Flair steuert die Klappen nach den Sollwerten. Manuell: Sie bleiben, wie sie sind.",
+        "es": "Auto: Flair mueve las rejillas según las consignas. Manual: se quedan como están."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Home",
+            "fr": "Maison",
+            "de": "Zuhause",
+            "es": "Casa"
+          },
+          "required": true
+        },
+        {
+          "key": "enabled",
+          "type": "boolean",
+          "label": {
+            "en": "Auto mode",
+            "fr": "Mode Auto",
+            "de": "Auto-Modus",
+            "es": "Modo Auto"
+          },
+          "default": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "auto_mode",
+          "type": "boolean",
+          "label": {
+            "en": "Auto mode",
+            "fr": "Mode Auto",
+            "de": "Auto-Modus",
+            "es": "Modo Auto"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "flair_overview",
+      "label": {
+        "en": "Flair overview",
+        "fr": "Vue d’ensemble Flair",
+        "de": "Flair-Übersicht",
+        "es": "Resumen de Flair"
+      },
+      "description": {
+        "en": "Room temperatures and set points, open vents, offline devices, Home/Away.",
+        "fr": "Températures et consignes des pièces, bouches ouvertes, appareils hors ligne, Présent/Absent.",
+        "de": "Raumtemperaturen und Sollwerte, offene Klappen, Offline-Geräte, Zuhause/Abwesend.",
+        "es": "Temperaturas y consignas, rejillas abiertas, dispositivos sin conexión, En casa/Fuera."
+      },
+      "icon": "wind",
+      "action_timeout_seconds": 30
+    }
+  ]
+}
