@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-11-16
+
 - Update `@gladysassistant/integration-sdk` to 0.16.1 (security update).
 
 ## [1.0.2] - 2026-11-16
@@ -46,6 +48,7 @@ the notes of the version's GitHub Release.
   build), Release workflow, GitHub Releases, Dependabot.
 - `SECURITY.md` and `CLAUDE.md`.
 
-[Unreleased]: https://github.com/prohand/gladys-flair/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/prohand/gladys-flair/compare/v1.0.3...HEAD
+[1.0.3]: https://github.com/prohand/gladys-flair/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/prohand/gladys-flair/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/prohand/gladys-flair/releases/tag/v1.0.1
