@@ -163,3 +163,12 @@ test('the catalog description holds 10 to 100 characters per language', () => {
     assert.ok(text.length >= 10 && text.length <= 100, `description.${lang}: ${text.length}`);
   }
 });
+
+test('the catalog countries: the United States and Canada, which needs Gladys >= 5.3.0', () => {
+  // Flair Smart Vents and Pucks are sold in the United States and Canada.
+  // Declared, the catalog of an instance located elsewhere hides the
+  // integration from its browse views (the search still finds it).
+  assert.deepEqual(manifest.countries, ['US', 'CA']);
+  const [major, minor] = manifest.gladys_version.replace(/^>=/, '').split('.').map(Number);
+  assert.ok(major > 5 || (major === 5 && minor >= 3), 'countries needs Gladys 5.3.0');
+});
