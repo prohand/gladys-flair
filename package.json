@@ -1,6 +1,6 @@
 {
   "name": "gladys-flair",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "description": "Gladys Assistant external integration for Flair Smart Vents and Pucks (cloud API).",
   "type": "module",

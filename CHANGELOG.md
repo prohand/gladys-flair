@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.5] - 2026-11-18
+
 ### Changed
 
 - Declared for the United States and Canada only (`countries: ["US", "CA"]`): the Gladys
@@ -58,7 +60,8 @@ the notes of the version's GitHub Release.
   build), Release workflow, GitHub Releases, Dependabot.
 - `SECURITY.md` and `CLAUDE.md`.
 
-[Unreleased]: https://github.com/prohand/gladys-flair/compare/v1.0.4...HEAD
+[Unreleased]: https://github.com/prohand/gladys-flair/compare/v1.0.5...HEAD
+[1.0.5]: https://github.com/prohand/gladys-flair/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/prohand/gladys-flair/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/prohand/gladys-flair/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/prohand/gladys-flair/compare/v1.0.1...v1.0.2
